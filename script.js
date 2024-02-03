@@ -62,11 +62,22 @@ function getComputerChoice() {
 */
 
 function playerSelection() {
-	let playerInput = prompt("Input your choice").toLowerCase(); // Get player's input and converts it lowercase
-	let playerChoice = playerInput.trim(); //Trimming heading and trailing white spaces from player's input
-	return playerChoice;
-}
+	const validChoices = ['rock', 'paper', 'scissor'];
 
+	while (true) {
+		let playerInput = prompt("Input your choice").toLowerCase(); // Get player's input and converts it lowercase
+		let playerChoice = playerInput.trim(); //Trimming heading and trailing white spaces from player's input
+	
+		//check if user's input is a valid choice
+		if (validChoices.includes(playerChoice)) {
+			return playerChoice; // return the valid choice
+		}
+		else {
+			console.log("Invalid choice. Please enter 'rock', 'paper', or 'scissors'");
+		}
+
+	}
+}
 
 
 /**
