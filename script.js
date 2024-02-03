@@ -12,10 +12,16 @@
  * // Returns a random integer between 1 and 10 (inclusive)
  * const randomNum = getRandomInt(1, 10);
  */
-function getRandomInt(max, min){
-	const n;
-	n = (math.random()*(max - min + 1) + min;
-	return math.floor(n);
+function getRandomInt(max, min) {
+	if (!Number.isFinite(min) || !Number.isFinite(max)) {
+		throw new Error("min and max must be finite numbers");
+	}
+	if (min > max) {
+		throw new Error("min must be less than or equal to max");
+	}
+
+	const n = Math.floor(Math.random() * (max - min + 1) + min);
+	return n;
 }
 
 
@@ -27,23 +33,23 @@ function getRandomInt(max, min){
  * @example
  * // Returns 'paper'
  * const computerChoice = getComputerChoice();
- */
+*/
+
 function getComputerChoice() {
-	const randomNumber;
-	randomNumber = getRandomInt(3, 1);
+	const randomNumber =  getRandomInt(3, 1);
+	let computerChoice;
+
 	if (randomNumber === 3) {
-		let computerChoice === "rock";
+		computerChoice = "rock";
 	}
 	else if (randomNumber === 2) {
-		let computerChoice === "paper";
+		computerChoice = "paper";
 	}
 	else {
-		let computerChoice === "scissors";
+		computerChoice = "scissors";
 	}
 	return computerChoice;
 }
-
-
 
 /**
  * Prompt the player to input their move (rock, paper, or scissors).
@@ -53,15 +59,13 @@ function getComputerChoice() {
  * @example
  * // Returns 'paper' (assuming the player enters 'paper' when prompted)
  * const playerChoice = playerSelection();
- */
+*/
+
 function playerSelection() {
 	let playerInput = prompt("Input your choice").toLowerCase(); // Get player's input and converts it lowercase
 	let playerChoice = playerInput.trim(); //Trimming heading and trailing white spaces from player's input
 	return playerChoice;
 }
-
-
-
 
 
 
@@ -73,13 +77,12 @@ function playerSelection() {
  * @example
  * // Returns 'scissors'
  * const computerMove = computerSelection();
- */
+*/
+
 function computerSelection() {
 	let computerChoice = getComputerChoice();
 	return computerChoice;
 }
-
-
 
 
 
@@ -93,55 +96,49 @@ function computerSelection() {
  * @example
  * // Returns { result: 'Player wins', message: 'Paper beats rock. You win!' }
  * const roundResult = singleRound('paper', 'rock');
- */
-function singleRound(playerSelection, computerSelection) {
+*/
+
+function playSingleRound(playerMove, computerMove) {
 	let result, message;
-	if (playerSelection === "rock" && computerSelection === "rock") {
+	if (playerMove === "rock" && computerMove === "rock") {
 		result = "Draw";
 		message = "It's a draw!";
 	}
-	else if (playerSelection === "rock" && computerSelection === "paper") {
+	else if (playerMove === "rock" && computerMove === "paper") {
 		result = "Computer wins!";
 		message = "You lose! Paper covers Rock";
 	}
-	else if (playerSelection === "rock" && computerSelection === "scissors") {
+	else if (playerMove === "rock" && computerMove === "scissors") {
                 result = "Player wins!";
                 message = "You win! Rock crushes Scissors";
         }
-	else if (playerSelection === "paper" && computerSelection === "rock") {
+	else if (playerMove === "paper" && computerMove === "rock") {
                 result = "Player wins!";
                 message = "You win! Paper covers Rock";
         }
-	else if (playerSelection === "paper" && computerSelection === "paper") {
+	else if (playerMove === "paper" && computerMove === "paper") {
                 result = "Draw";
                 message = "It's a draw!";
         }
-	else if (playerSelection === "paper" && computerSelection === "scissors") {
+	else if (playerMove === "paper" && computerMove === "scissors") {
                 result = "Computer wins!";
                 message = "You lose! Scissors cuts Paper";
         }
-	else if (playerSelection === "scissors" && computerSelection === "rock") {
+	else if (playerMove === "scissors" && computerMove === "rock") {
                 result = "Computer wins!";
                 message = "You lose! Rock crushes Scissors";
         }
-	else if (playerSelection === "scissors" && computerSelection === "paper") {
+	else if (playerMove === "scissors" && computerMove === "paper") {
                 result = "Player wins!";
                 message = "You win! Scissors cuts Paper";
         }
-	else if (playerSelection === "scissors" && computerSelection === "scissors") {
+	else if (playerMove === "scissors" && computerMove === "scissors") {
                 result = "Draw";
                 message = "It's a draw!";
         }
-	if (result === "Draw!") {
-		singleRound(playerSelection, computerSelection);
-	}
-	else {
-		return result, message;
-	}
+	//Return object with both values
+	return {result, message};
 }
-
-
-
 
 
 /**
@@ -151,27 +148,33 @@ function singleRound(playerSelection, computerSelection) {
  * @example
  * // Returns { playerScore: 3, computerScore: 2 }
  * const finalScores = game();
- */
+*/
 function game() {
-	let i = 0;
-	let playerScore = 0; 
-	let computerScore = 0;
-	for (i; i < 5; i++) {
-		singleRound(playerSelection, computerSelection);
-		if (result === "Computer wins!") {
-			computerScore++;
-		}
-		else if (result === "Player wins!") {
-			playerScore++;
-		}
-		console.log(message);
-	}
-	let gameResult = `Player Score: ${playerScore}
-	Computer Score: ${computerScore}`;
-	if (playerScore > computerScore) {
-		console.log("Seems like you got some tricks up your sleeves! Wanna play again?");
-	}
-	else if (computerScore > playerScore) {
-		console.log("It must be HUMBLING to suck on so many games!");
-	}
+        let playerScore = 0;
+        let computerScore = 0;
+	//loop stay true until one either computer or player score equal 5
+        while (!(computerScore === 5 || playerScore === 5)) {
+		const playerMove = playerSelection();
+		const computerMove = computerSelection();
+                const roundResult = playSingleRound(playerMove, computerMove);
+
+                if (roundResult.result === "Computer wins!") {
+                        computerScore++;
+                }
+                else if (roundResult.result === "Player wins!") {
+                        playerScore++;
+                }
+
+                console.log(roundResult.message);
+        }
+
+        let gameResult = `Player Score: ${playerScore}\nComputer Score: ${computerScore}`;
+        if (playerScore > computerScore) {
+                console.log("Seems like you got some tricks up your sleeves! Wanna play again?");
+        }
+        else if (computerScore > playerScore) {
+                console.log("It must be HUMBLING to suck on so many games!");
+        }
+	console.log(gameResult);
 }
+game();
