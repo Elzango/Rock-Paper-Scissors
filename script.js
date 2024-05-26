@@ -159,7 +159,7 @@ function playSingleRound(playerMove, computerMove) {
  * @example
  * // Returns { playerScore: 3, computerScore: 2 }
  * const finalScores = game();
-*/
+
 function game() {
         let playerScore = 0;
         let computerScore = 0;
@@ -189,3 +189,4 @@ function game() {
 	console.log(gameResult);
 }
 game();
+*/
