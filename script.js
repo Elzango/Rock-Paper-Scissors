@@ -79,10 +79,27 @@ function playerSelection() {
 	}
 }
 
+const choices = document.querySelectorAll("button");
+
+choices.forEach((button))
 
 /**
- * Generate the computer's move (rock, paper, or scissors).
+ * Record player move (rock, paper, or scissors) from click input
  *
+ * @returns {string} player choice
+ *
+ * @param {string click event}
+ /
+function playerSelection(button)
+{
+	return (button.id)
+}
+**/
+
+
+
+/**
+ * Generate the computer's move (rock, paper, or scissors). *
  * @returns {string} The computer's randomly chosen move: 'rock', 'paper', or 'scissors'.
  *
  * @example
