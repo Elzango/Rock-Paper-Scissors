@@ -1,0 +1,41 @@
+#container {
+	text-align: center; /* Center the buttons horizontally */
+	margin-top: 50px;  /* Add space at the top */
+}
+
+#rock, #paper, #scissors {
+	padding: 15px 30px;  /* Larger padding for a more substantial feel */
+	border:2px solid #ddd;
+	border-radius: 10px;
+	margin: 15px;
+	cursor: pointer;  /* Indicate clickable button */
+	font-size: 18px:   /* make the text larger */
+	transition: transform 0.2s ease, opacity 0.2s ease; /* Add transition for hover effects */
+}
+
+#rock {
+	background-color: #e74c3c; /* Brighter reddish for rock */
+	color: white; 
+}
+
+#paper {
+	background-color: #3498db; /* Richer blue for paper */
+        color: white;
+}
+
+#scissors {
+	background-color: #f1c40f;  /* Brighter yellow for scissors */
+        color: black;
+}
+
+#rock:hover, #paper:hover, #scissors:hover {
+	opacity: 0.9;   /*Slight transparency on hover */
+	transform: scale(1.05);   /* Slightly enlarges on hover */
+}
+
+#result, #score {
+	text-align: center; /* Center-align result and score */
+	margin-top: 20px; /* Add space between buttons and text */
+	font-weight: 20px;
+	font-weight: bold;
+}
