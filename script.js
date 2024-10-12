@@ -1,3 +1,20 @@
+let playerScore = 0;
+let computerScore = 0;
+let roundCount = 0;
+const maxRounds = 5; // Game lasts for 5 rounds
+
+
+const buttons = document.querySelectorAll("#container button");
+const resultDiv = document.getElementById("result");
+const scoreDiv =  document.getElementById("score");
+const finalResultDiv = document.getElementById("final-result");
+const resetButton = document.getElementById("reset");
+const roundTrackerDiv = document.getElementById("round-tracker");
+
+function updateRoundTracker() {
+    roundTrackerDiv.textContent = `Round: ${roundCount} / ${maxRounds}`;
+}
+
 /**
  * Generate a random integer between a specified range (inclusive).
  *
@@ -19,83 +36,28 @@ function getRandomInt(max, min) {
 	if (min > max) {
 		throw new Error("min must be less than or equal to max");
 	}
-
-	const n = Math.floor(Math.random() * (max - min + 1) + min);
-	return n;
+	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-
 /**
- * Generate the computer's choice between rock, paper, or scissors.
+ * Function to randomly select a choice for the computer in a Rock-Paper-Scissors game
  *
- * @returns {string} The computer's randomly chosen option: 'rock', 'paper', or 'scissors'.
+ * The function generates a random number between 1 and 3, where:
  *
- * @example
- * // Returns 'paper'
- * const computerChoice = getComputerChoice();
-*/
-
+ * - 1 corresponds to "rock"
+ * - 2 corresponds to "paper"
+ * - 3 corresponds to "scissors"
+ *
+ *   @returns {string} - The computer's choice, either "rock", "paper" or "scissors".
+ */
 function getComputerChoice() {
-	const randomNumber =  getRandomInt(3, 1);
-	let computerChoice;
-
-	if (randomNumber === 3) {
-		computerChoice = "rock";
-	}
-	else if (randomNumber === 2) {
-		computerChoice = "paper";
-	}
-	else {
-		computerChoice = "scissors";
-	}
-	return computerChoice;
+	const randomNumber = getRandomInt(3, 1);
+	if (randomNumber == 1)
+		return "rock"
+	if (randomNumber == 2)
+		return "paper"
+	return "scissors";
 }
-
-/**
- * Prompt the player to input their move (rock, paper, or scissors).
- *
- * @returns {string} The player's choice: 'rock', 'paper', or 'scissors'.
- *
- * @example
- * // Returns 'paper' (assuming the player enters 'paper' when prompted)
- * const playerChoice = playerSelection();
-*/
-
-function playerSelection() {
-	const validChoices = ['rock', 'paper', 'scissor'];
-
-	while (true) {
-		let playerInput = prompt("Input your choice").toLowerCase(); // Get player's input and converts it lowercase
-		let playerChoice = playerInput.trim(); //Trimming heading and trailing white spaces from player's input
-	
-		//check if user's input is a valid choice
-		if (validChoices.includes(playerChoice)) {
-			return playerChoice; // return the valid choice
-		}
-		else {
-			console.log("Invalid choice. Please enter 'rock', 'paper', or 'scissors'");
-		}
-
-	}
-}
-
-
-/**
- * Generate the computer's move (rock, paper, or scissors).
- *
- * @returns {string} The computer's randomly chosen move: 'rock', 'paper', or 'scissors'.
- *
- * @example
- * // Returns 'scissors'
- * const computerMove = computerSelection();
-*/
-
-function computerSelection() {
-	let computerChoice = getComputerChoice();
-	return computerChoice;
-}
-
-
 
 /**
  * Conduct a single round of the game between player and computer.
@@ -108,84 +70,93 @@ function computerSelection() {
  * // Returns { result: 'Player wins', message: 'Paper beats rock. You win!' }
  * const roundResult = singleRound('paper', 'rock');
 */
-
 function playSingleRound(playerMove, computerMove) {
-	let result, message;
-	if (playerMove === "rock" && computerMove === "rock") {
-		result = "Draw";
-		message = "It's a draw!";
+	if (playerMove === computerMove) {
+		return {result: "Draw", message: `Both chose ${playerMove}. It's a draw!` };
 	}
-	else if (playerMove === "rock" && computerMove === "paper") {
-		result = "Computer wins!";
-		message = "You lose! Paper covers Rock";
+	if (
+	(playerMove == "rock" && computerMove == "scissors") ||
+	(playerMove == "paper" && computerMove == "rock") ||
+	(playerMove == "scissors" && computerMove == "paper")
+	)
+	{
+		return {result: "Player wins!", message: `You Win! ${playerMove} beats ${computerMove}` };
 	}
-	else if (playerMove === "rock" && computerMove === "scissors") {
-                result = "Player wins!";
-                message = "You win! Rock crushes Scissors";
-        }
-	else if (playerMove === "paper" && computerMove === "rock") {
-                result = "Player wins!";
-                message = "You win! Paper covers Rock";
-        }
-	else if (playerMove === "paper" && computerMove === "paper") {
-                result = "Draw";
-                message = "It's a draw!";
-        }
-	else if (playerMove === "paper" && computerMove === "scissors") {
-                result = "Computer wins!";
-                message = "You lose! Scissors cuts Paper";
-        }
-	else if (playerMove === "scissors" && computerMove === "rock") {
-                result = "Computer wins!";
-                message = "You lose! Rock crushes Scissors";
-        }
-	else if (playerMove === "scissors" && computerMove === "paper") {
-                result = "Player wins!";
-                message = "You win! Scissors cuts Paper";
-        }
-	else if (playerMove === "scissors" && computerMove === "scissors") {
-                result = "Draw";
-                message = "It's a draw!";
-        }
-	//Return object with both values
-	return {result, message};
+	else
+	{
+		return {result: "Computer wins!", message: `You Lose! ${computerMove} beats ${playerMove}` };
+	}
 }
-
 
 /**
- * Play a game consisting of multiple rounds between the player and the computer.
+ * Function to update the scores of the player and computer based on the game result.
  *
+ * This function takes the result of a game round and increments the player's or
+ * computer's score depending on the outcome:
+ *  - If the result is "Player wins!", the player's score is incremented.
+ *  - If the result is "Computer wins!", the computer's score is incrementent
+ * It then updates the displayed score on the webpage.
  *
- * @example
- * // Returns { playerScore: 3, computerScore: 2 }
- * const finalScores = game();
-*/
-function game() {
-        let playerScore = 0;
-        let computerScore = 0;
-	//loop stay true until one either computer or player score equal 5
-        while (!(computerScore === 5 || playerScore === 5)) {
-		const playerMove = playerSelection();
-		const computerMove = computerSelection();
-                const roundResult = playSingleRound(playerMove, computerMove);
+ * @param {Object} result - An object containing the result of the current game round.
+ * @param {string} result.result - A string indicating the winner, either "Player wins!" or "Computer wins!".
+ */
+function updateScore(result) {
 
-                if (roundResult.result === "Computer wins!") {
-                        computerScore++;
-                }
-                else if (roundResult.result === "Player wins!") {
-                        playerScore++;
-                }
-
-                console.log(roundResult.message);
-        }
-
-        let gameResult = `Player Score: ${playerScore}\nComputer Score: ${computerScore}`;
-        if (playerScore > computerScore) {
-                console.log("Seems like you got some tricks up your sleeves! Wanna play again?");
-        }
-        else if (computerScore > playerScore) {
-                console.log("It must be HUMBLING to suck on so many games!");
-        }
-	console.log(gameResult);
+	if (result.result === "Player wins!")
+	{
+		playerScore++;
+	}
+	else if (result.result === "Computer wins!")
+	{
+		computerScore++;
+	}
+	scoreDiv.textContent = `Player: ${playerScore}, Computer: ${computerScore}`;
+	console.log(`Updated score: Player: ${playerScore}, Computer: ${computerScore}`);
 }
-game();
+
+function checkEndOfGame() {
+    if (roundCount >= maxRounds) {
+        // Handle the game ending by showing the final result
+        if (playerScore > computerScore) {
+            finalResultDiv.textContent = "Congratulations! You won the game!";
+        } else if (computerScore > playerScore) {
+            finalResultDiv.textContent = "The computer won the game!";
+        } else {
+            finalResultDiv.textContent = "It's a tie!";
+        }
+
+        // Disable the game buttons
+        buttons.forEach(button => button.disabled = true);
+        resetButton.style.display = "block"; // Show the reset button
+    }
+}
+
+// Add event listeners to each button
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (roundCount < maxRounds) {
+            const playerMove = button.id; // Get player's choice from button id
+            const computerMove = getComputerChoice();
+            const roundResult = playSingleRound(playerMove, computerMove);
+
+            resultDiv.textContent = roundResult.message; // Display the round result
+            updateScore(roundResult); // Update the score
+            roundCount++; // Increment the round count after valid round
+            checkEndOfGame(); // Check if the game has ended
+	    updateRoundTracker();
+        }
+    });
+});
+
+
+// Reset the game
+resetButton.addEventListener("click", () => {
+    playerScore = 0;
+    computerScore = 0;
+    roundCount = 0;
+    resultDiv.textContent = "";
+    scoreDiv.textContent = "Player: 0, Computer: 0";
+    finalResultDiv.textContent = "";
+    buttons.forEach(button => button.disabled = false);
+    resetButton.style.display = "none";
+});
