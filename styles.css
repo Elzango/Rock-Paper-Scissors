@@ -1,0 +1,92 @@
+/* Dark background for the body */
+body {
+  background-color: #2c3e50; /* Darker shade of blue-gray */
+  color: white; /* Text color to contrast the dark background */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container for buttons and game elements */
+#container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+/* Style for buttons */
+#rock, #paper, #scissors {
+  width: 25vw;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 2vw;
+  background-color: #3498db;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#rock {
+  background-color: #e74c3c;
+}
+
+#paper {
+  background-color: #f1c40f;
+}
+
+#scissors {
+  background-color: #3498db;
+}
+
+/* Hover effect for buttons */
+#rock:hover, #paper:hover, #scissors:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* Style for the result div */
+#result {
+  width: 100vw;
+  height: 10vh;
+  background-color: #34495e; /* Darker background for the result area */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vw;
+  color: white; /* Text color to contrast background */
+}
+
+/* Flex column for score */
+#score {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 3vw;
+  font-weight: bold;
+  margin-top: 1vh;
+}
+
+/* Title styling */
+#game-title {
+  text-align: center;
+  font-size: 5vw;
+  margin-top: 1vh;
+}
+
+/* Reset button styling */
+#reset {
+  margin-top: 1vh;
+  padding: 10px 20px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 2.5vw;
+  cursor: pointer;
+}
+
+#reset:hover {
+  background-color: #27ae60;
+}
