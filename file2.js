@@ -1,9 +1,19 @@
 let playerScore = 0;
 let computerScore = 0;
+let roundCount = 0;
+const maxRounds = 5; // Game lasts for 5 rounds
 
-const buttons = document.querySelectAll("button");
-const resyltDiv = document.getElementById("result");
+
+const buttons = document.querySelectorAll("#container button");
+const resultDiv = document.getElementById("result");
 const scoreDiv =  document.getElementById("score");
+const finalResultDiv = document.getElementById("final-result");
+const resetButton = document.getElementById("reset");
+const roundTrackerDiv = document.getElementById("round-tracker");
+
+function updateRoundTracker() {
+    roundTrackerDiv.textContent = `Round: ${roundCount} / ${maxRounds}`;
+}
 
 /**
  * Generate a random integer between a specified range (inclusive).
@@ -41,7 +51,7 @@ function getRandomInt(max, min) {
  *   @returns {string} - The computer's choice, either "rock", "paper" or "scissors".
  */
 function getComputerChoice() {
-	const randomNumber = getRandonInt(3, 1);
+	const randomNumber = getRandomInt(3, 1);
 	if (randomNumber == 1)
 		return "rock"
 	if (randomNumber == 2)
@@ -67,14 +77,14 @@ function playSingleRound(playerMove, computerMove) {
 	if (
 	(playerMove == "rock" && computerMove == "scissors") ||
 	(playerMove == "paper" && computerMove == "rock") ||
-	(playerMove == "rock" && computerMove == "scissors")
+	(playerMove == "scissors" && computerMove == "paper")
 	)
 	{
-		return {result: "Player Wins!", message: `You lose! ${computerMove} beats ${playerMove}` };
+		return {result: "Player wins!", message: `You Win! ${playerMove} beats ${computerMove}` };
 	}
 	else
 	{
-		return {result: "Computer wins!", message: `You lose! ${computerMove} beats ${playerMove}` };
+		return {result: "Computer wins!", message: `You Lose! ${computerMove} beats ${playerMove}` };
 	}
 }
 
@@ -84,30 +94,70 @@ function playSingleRound(playerMove, computerMove) {
  * This function takes the result of a game round and increments the player's or
  * computer's score depending on the outcome:
  *  - If the result is "Player wins!", the player's score is incremented.
- *  - If the result is "Computer wins!", the computer's score is incremented.
- *
+ *  - If the result is "Computer wins!", the computer's score is incrementent
  * It then updates the displayed score on the webpage.
  *
  * @param {Object} result - An object containing the result of the current game round.
  * @param {string} result.result - A string indicating the winner, either "Player wins!" or "Computer wins!".
  */
 function updateScore(result) {
-    if (result.result === "Player wins!") {
-        playerScore++;
-    } else if (result.result === "Computer wins!") {
-        computerScore++;
-    }
 
-    scoreDiv.textContent = `Player: ${playerScore}, Computer: ${computerScore}`;
+	if (result.result === "Player wins!") 
+	{
+		playerScore++;
+	} 
+	else if (result.result === "Computer wins!") 
+	{
+		computerScore++;
+	}
+	scoreDiv.textContent = `Player: ${playerScore}, Computer: ${computerScore}`;
+	console.log(`Updated score: Player: ${playerScore}, Computer: ${computerScore}`);
 }
 
-buttons.forEach(button => () {
-	button.addEventListener("click", () => {
-		const playerMove = button.id; // Get player's choice from button id i.e click
-		const computerMove = getComputerChoice();
-		const roundResult = playSingleRound(playerMove, computerMove);
+function checkEndOfGame() {
+    if (roundCount >= maxRounds) {
+        // Handle the game ending by showing the final result
+        if (playerScore > computerScore) {
+            finalResultDiv.textContent = "Congratulations! You won the game!";
+        } else if (computerScore > playerScore) {
+            finalResultDiv.textContent = "The computer won the game!";
+        } else {
+            finalResultDiv.textContent = "It's a tie!";
+        }
 
-		resultDiv.textContent = roundResult.message; //Display the round result
-		updateScore(roundResult); // update the score
-	});
+        // Disable the game buttons
+        buttons.forEach(button => button.disabled = true);
+        resetButton.style.display = "block"; // Show the reset button
+    }
+}
+
+// Add event listeners to each button
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (roundCount < maxRounds) {
+            const playerMove = button.id; // Get player's choice from button id
+            const computerMove = getComputerChoice();
+            const roundResult = playSingleRound(playerMove, computerMove);
+
+            resultDiv.textContent = roundResult.message; // Display the round result
+            updateScore(roundResult); // Update the score
+            roundCount++; // Increment the round count after valid round
+            checkEndOfGame(); // Check if the game has ended
+	    updateRoundTracker();
+        }
+    });
 });
+
+
+// Reset the game
+resetButton.addEventListener("click", () => {
+    playerScore = 0;
+    computerScore = 0;
+    roundCount = 0;
+    resultDiv.textContent = "";
+    scoreDiv.textContent = "Player: 0, Computer: 0";
+    finalResultDiv.textContent = "";
+    buttons.forEach(button => button.disabled = false);
+    resetButton.style.display = "none";
+});
+

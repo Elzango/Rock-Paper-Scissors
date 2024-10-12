@@ -8,14 +8,17 @@
 	<link rel="stylesheet" href="styles.css">
     </head>
     <body>
+	<h1 id="game-title">Rock Paper Scissors</h1>    
 	<div id="container">
 	    <button id="rock">Rock</button>
 	    <button id="paper">Paper</button>
 	    <button id="scissors">Scissors</button>
 	</div>
-	<div> id="result"></div>
-	<div> id="score">PLayer: 0, Computer: 0</div>
-
+	<div id="result"></div>
+	<div id="score">Player: 0 , Computer: 0</div>
+        <div id="final-result"></div> <!-- To display the final winner after 5 rounds -->
+        <button id="reset" style="display:none;">Play Again</button> <!-- Reset button -->	
+	<div id="round-tracker">Round: 0 / 5</div>
         <script src="file2.js"></script>
     </body>
 
